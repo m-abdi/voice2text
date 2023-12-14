@@ -1,0 +1,54 @@
+{
+  "name": "voice2text",
+  "version": "1.0.0",
+  "description": "speech to text functionality with minimum configuration and maximum compatibility",
+  "main": "pkg/index.js",
+  "types": "pkg/*.d.ts",
+  "scripts": {
+    "format": "npx prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-vosk": "cd vosk-browser/lib && npm run build",
+    "dev": "npm run build-vosk && webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "build-examples": "npm run build && webpack --config webpack.examples.js && cp pkg/* examples/browser"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-abdi/voice2text.git"
+  },
+  "keywords": [
+    "vosk",
+    "whisper",
+    "stt",
+    "asr",
+    "speech to text",
+    "wasm"
+  ],
+  "author": "Mehdi Abdi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m-abdi/voice2text/issues"
+  },
+  "homepage": "https://github.com/m-abdi/voice2text#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "dotenv": "^16.3.1",
+    "dotenv-webpack": "^8.0.1",
+    "html-webpack-plugin": "^5.5.3",
+    "node-polyfill-webpack-plugin": "^3.0.0",
+    "prettier": "3.1.0",
+    "style-loader": "^3.3.3",
+    "terser-webpack-plugin": "^5.3.9",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-merge": "^5.10.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.1",
+    "vosk-browser-helper": "file:vosk-browser-helper/pkg"
+  }
+}
