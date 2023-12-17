@@ -1,7 +1,7 @@
-import { SpeechToTextModel, Vosk } from "./models";
+import { VoiceToTextModel, Vosk } from "./models";
 
-export class SpeechToText {
-  private readonly model: SpeechToTextModel;
+export class VoiceToText {
+  private readonly model: VoiceToTextModel;
 
   constructor(options: {
     model?: MODELS;

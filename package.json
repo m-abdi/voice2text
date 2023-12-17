@@ -1,9 +1,10 @@
 {
   "name": "voice2text",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "speech to text functionality with minimum configuration and maximum compatibility",
   "main": "pkg/index.js",
   "types": "pkg/*.d.ts",
+  "readme": "README.md",
   "scripts": {
     "format": "npx prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1",

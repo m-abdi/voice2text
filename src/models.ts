@@ -4,7 +4,7 @@ import {
 } from "../vosk-browser/lib/dist/interfaces.js";
 import { KaldiRecognizer, Model } from "../vosk-browser/lib/dist/vosk.js";
 
-export interface SpeechToTextModel {
+export interface VoiceToTextModel {
   start(): void;
   pause(): void;
   stop(): void;
@@ -12,7 +12,7 @@ export interface SpeechToTextModel {
 
 const sampleRate = 16000;
 
-export class Vosk implements SpeechToTextModel {
+export class Vosk implements VoiceToTextModel {
   readonly language: LANGUAGE = undefined;
   readonly model: string;
   readonly modelUrl: string;
@@ -55,7 +55,7 @@ export class Vosk implements SpeechToTextModel {
         recognizer.on("result", (message: ServerMessageResult) => {
           const result = message.result.text;
           if (result && this.result !== result) {
-            const resultEvent = new CustomEvent("speech", {
+            const resultEvent = new CustomEvent("voice", {
               detail: {
                 text: result,
                 type: "final",
@@ -71,7 +71,7 @@ export class Vosk implements SpeechToTextModel {
           (message: ServerMessagePartialResult) => {
             const partial = message.result.partial;
             if (partial && this.partialResult !== partial) {
-              const partialResultEvent = new CustomEvent("speech", {
+              const partialResultEvent = new CustomEvent("voice", {
                 detail: {
                   text: partial,
                   type: "partial",

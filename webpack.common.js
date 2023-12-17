@@ -5,9 +5,9 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   output: {
     library: {
-      name: "SpeechToText",
+      name: "VoiceToText",
       type: "umd",
-      export: ["SpeechToText"],
+      export: ["VoiceToText"],
     },
   },
   plugins: [
