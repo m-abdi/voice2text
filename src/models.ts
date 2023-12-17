@@ -31,7 +31,7 @@ export class Vosk implements SpeechToTextModel {
     modelUrl?: string;
   }) {
     this.language = options?.language;
-    this.model = options?.model
+    this.model = options?.model;
     this.modelUrl = options?.modelUrl;
     this.audioContext = new AudioContext();
   }

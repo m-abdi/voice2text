@@ -1,0 +1,3 @@
+[submodule "vosk-browser"]
+	path = vosk-browser
+	url = https://github.com/m-abdi/vosk-browser

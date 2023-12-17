@@ -3,13 +3,12 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-
   output: {
     library: {
       name: "SpeechToText",
       type: "umd",
-      export: ['SpeechToText']
-    }
+      export: ["SpeechToText"],
+    },
   },
   plugins: [
     new Dotenv(),

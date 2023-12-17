@@ -7,7 +7,7 @@
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",
-    "declaration": false,
+    "declaration": false
   },
   "exclude": ["node_modules", "vosk-browser"]
 }
