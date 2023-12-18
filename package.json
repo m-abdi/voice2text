@@ -1,9 +1,14 @@
 {
   "name": "voice2text",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "speech to text functionality with minimum configuration and maximum compatibility",
   "main": "pkg/index.js",
   "types": "pkg/*.d.ts",
+  "files": [
+    "pkg",
+    "README.md",
+    "LICENSE"
+  ],
   "readme": "README.md",
   "scripts": {
     "format": "npx prettier --write .",
@@ -23,7 +28,8 @@
     "stt",
     "asr",
     "speech to text",
-    "wasm"
+    "wasm",
+    "voice to text"
   ],
   "author": "Mehdi Abdi",
   "license": "MIT",
@@ -49,7 +55,6 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
-    "uuid": "^9.0.1",
-    "vosk-browser-helper": "file:vosk-browser-helper/pkg"
+    "uuid": "^9.0.1"
   }
 }
