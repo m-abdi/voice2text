@@ -11,7 +11,7 @@ module.exports = merge(common, {
   },
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname, "pkg"),
+    path: path.resolve(__dirname, "dist"),
     clean: true,
   },
   plugins: [
@@ -32,19 +32,4 @@ module.exports = merge(common, {
       }),
     ],
   },
-  // devtool: 'source-map',
-
-  // optimization: {
-  //   splitChunks: {
-  //     chunks: "all",
-  //   },
-  // },
-  // use: [
-  //   {
-  //     loader: 'ts-loader',
-  //     options: {
-  //       transpileOnly: true,
-  //     },
-  //   },
-  // ],
 });

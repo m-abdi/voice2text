@@ -1,11 +1,11 @@
 {
   "name": "voice2text",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "speech to text functionality with minimum configuration and maximum compatibility",
-  "main": "pkg/index.js",
-  "types": "pkg/*.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/*.d.ts",
   "files": [
-    "pkg",
+    "dist",
     "README.md",
     "LICENSE"
   ],

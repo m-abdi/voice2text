@@ -10,22 +10,7 @@ module.exports = {
       export: ["VoiceToText"],
     },
   },
-  plugins: [
-    new Dotenv(),
-    new NodePolyfillPlugin(),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: "./vosk-browser/lib/dist/vosk-worker.js",
-          to: "./vosk-worker.js",
-        },
-        {
-          from: "./vosk-browser/lib/dist/vosk.wasm",
-          to: "./vosk.wasm",
-        },
-      ],
-    }),
-  ],
+  plugins: [new Dotenv(), new NodePolyfillPlugin()],
   module: {
     rules: [
       {
