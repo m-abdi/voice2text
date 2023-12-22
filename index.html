@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>voice2text web example</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="./images/favicon.png"
+    />
+    <script src="../../dist/voice2text.js" type="text/javascript"></script>
+    <script defer src="./index.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="./fonts.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>voice2text demo</h1>
+      <section>
+        <a
+          aria-label="source code of this demo"
+          href="https://github.com/m-abdi/voice2text"
+          target="_blank"
+        >
+          <img src="./images/GitHub.png" alt="" width="30" height="30" />
+        </a>
+        <a
+          aria-label="npm page of the package"
+          href="https://www.npmjs.com/package/voice2text?activeTab=readme"
+          target="_blank"
+        >
+          <img src="./images/npmjs.png" alt="" width="25" height="25" />
+        </a>
+      </section>
+    </header>
+    <main>
+      <span></span>
+      <div id="textarea-container">
+        <div>
+          <img
+            id="copy-button"
+            aria-label="copy"
+            title="copy"
+            src="./images/copy.png"
+            width="25"
+            height="25"
+            alt="copy"
+            role="button"
+          />
+        </div>
+        <textarea id="result"> </textarea>
+      </div>
+
+      <button title="start recording" aria-label="start recording" autofocus>
+        <img
+          src="./images/microphone.svg"
+          width="70"
+          height="70"
+          alt="microphone"
+        />
+      </button>
+    </main>
+  </body>
+</html>
