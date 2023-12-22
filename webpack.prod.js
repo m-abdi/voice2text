@@ -7,7 +7,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = merge(common, {
   mode: "production",
   entry: {
-    index: "./src/index.ts",
+    voice2text: "./src/index.ts",
   },
   output: {
     filename: "[name].js",

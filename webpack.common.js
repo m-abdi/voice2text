@@ -33,6 +33,13 @@ module.exports = {
           filename: "[name][ext][query]",
         },
       },
+      {
+        test: /\.(wasm)$/i,
+        type: "asset",
+        generator: {
+          filename: "[name][ext][query]",
+        },
+      },
     ],
   },
   resolve: {
