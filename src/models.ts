@@ -103,10 +103,6 @@ export class Vosk implements VoiceToTextModel {
           const { createModel } = await import(
             /* webpackChunkName: "vosk" */ "../vosk-browser/lib/dist/vosk.js"
           );
-
-          const response = await fetch(
-            this.language ? this.models[this.language] : this.modelUrl,
-          );
           const model: Model = await createModel(
             this.language ? this.models[this.language] : this.modelUrl,
           );
@@ -224,7 +220,7 @@ export class Vosk implements VoiceToTextModel {
   async trackFetchProgress(
     response: Response,
     handler: (progress: number) => void,
-    interval: number = 1500,
+    interval: number = 1500
   ) {
     const reader = response.body.getReader();
     const contentLength = +response.headers.get("Content-Length");
