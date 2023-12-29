@@ -8,6 +8,12 @@ html {
   box-sizing: inherit;
 }
 
+:root {
+  --color-primary: #ff4141;
+  --color-secondary: rgb(37, 148, 192);
+  --color-tertiary: rgb(77, 155, 32);
+}
+
 body {
   font-family: "PTSans", sans-serif;
   min-block-size: 95vh;
@@ -72,10 +78,10 @@ textarea {
   cursor: pointer;
 }
 
-button {
+#mic-button {
   inline-size: 70px;
   block-size: 70px;
-  background-color: #ff4141;
+  background-color: var(--color-primary);
   border: 0px;
   border-radius: 50%;
   inline-size: 70px;
@@ -88,10 +94,48 @@ button {
     rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
-button:focus,
-button:hover {
+#mic-button:focus,
+#mic-button:hover {
   border: 0px;
   outline: none;
+}
+
+#menu {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#converter-menu {
+  appearance: none;
+  text-align: center;
+  outline: none;
+  border: 0px;
+  border-radius: 50%;
+  inline-size: 55px;
+  block-size: 55px;
+  color: white;
+  background-color: var(--color-tertiary);
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 3px 6px,
+    rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+#language-menu {
+  appearance: none;
+  text-align: center;
+  outline: none;
+  border: 0px;
+  border-radius: 50%;
+  inline-size: 55px;
+  block-size: 55px;
+  color: white;
+  background-color: var(--color-secondary);
+  box-shadow:
+    rgba(0, 0, 0, 0.16) 0px 3px 6px,
+    rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 footer {

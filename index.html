@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>voice2text web example</title>
+    <title>voice2text demo</title>
     <link
       rel="icon"
       type="image/png"
@@ -53,14 +53,25 @@
         <textarea id="result"> </textarea>
       </div>
 
-      <button title="start recording" aria-label="start recording" autofocus>
-        <img
-          src="./images/microphone.svg"
-          width="70"
-          height="70"
-          alt="microphone"
-        />
-      </button>
+      <section id="menu">
+        <select id="converter-menu" title="converter">
+          <option value="vosk">vosk</option>
+        </select>
+        <button
+          id="mic-button"
+          title="start recording"
+          aria-label="start recording"
+          autofocus
+        >
+          <img
+            src="./images/microphone.svg"
+            width="70"
+            height="70"
+            alt="microphone"
+          />
+        </button>
+        <select id="language-menu" title="language"></select>
+      </section>
     </main>
   </body>
 </html>
