@@ -1,23 +1,16 @@
 import { VoiceToTextModel, Vosk } from "./models";
 
 export class VoiceToText {
-  constructor(options: {
-    model?: MODELS;
-    language?: LANGUAGE;
-    modelUrl?: string;
-  }) {
-    if (options?.model === "vosk") {
+  constructor(options: Options) {
+    if (options?.converter === "vosk") {
       return new Vosk({
-        model: options?.model,
+        converter: options?.converter,
         language: options?.language,
         modelUrl: options?.modelUrl,
+        sampleRate: options?.sampleRate,
       });
     } else {
-      return new Vosk({
-        model: "vosk",
-        language: options?.language,
-        modelUrl: options?.modelUrl,
-      });
+      alert("Invalid Converter!");
     }
   }
 }

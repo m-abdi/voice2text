@@ -1,6 +1,30 @@
-type LANGUAGE = "en" | "fa";
+type LANGUAGE =
+  | "en"
+  | "zh"
+  | "ru"
+  | "fr"
+  | "de"
+  | "es"
+  | "pt"
+  | "tr"
+  | "vi"
+  | "it"
+  | "nl"
+  | "ca"
+  | "ar"
+  | "fa"
+  | "uk"
+  | "kk"
+  | "ja"
+  | "eo"
+  | "hi"
+  | "cs"
+  | "pl"
+  | "uz"
+  | "ko"
+  | "br";
 
-type MODELS = "vosk" | "whisper";
+type CONVERTER = "vosk" | "whisper";
 
 type MODEL_STATUS = "OFF" | "LOADING" | "STARTED" | "PAUSED";
 
@@ -10,4 +34,11 @@ interface ResultEvent {
 
 interface PartialResultEvent {
   text: string;
+}
+
+interface Options {
+  converter?: CONVERTER;
+  language?: LANGUAGE;
+  modelUrl?: string;
+  sampleRate?: number;
 }

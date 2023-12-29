@@ -1,15 +1,35 @@
 let voice2text = new VoiceToText({
-  model: "vosk",
-  language: "fa",
+  converter: "vosk",
+  language: "en",
+  sampleRate: 42100,
 });
 const resultTag = document.querySelector("textarea");
-const recordButton = document.querySelector("button");
+const recordButton = document.querySelector("#mic-button");
+const converterMenu = document.querySelector("#converter-menu");
+const languageMenu = document.querySelector("#language-menu");
+voice2text.languages.map((lang) => {
+  const option = document.createElement("option");
+  option.value = lang.code;
+  option.text = lang.name;
+  languageMenu.add(option);
+});
+
 recordButton.addEventListener("click", () => {
   if (voice2text.status !== "STARTED") {
     voice2text.start();
   } else {
     voice2text.pause();
   }
+});
+
+converterMenu.addEventListener("change", (e) => {
+  console.log(e.target.value);
+});
+
+languageMenu.addEventListener("change", (e) => {
+  voice2text.setLanguage({
+    language: e.target.value,
+  });
 });
 
 window.addEventListener("voice", (e) => {
@@ -21,7 +41,7 @@ window.addEventListener("voice", (e) => {
     resultTag.value =
       resultTag.value.replace(/~.*?~/g, "") + " " + e.detail.text;
   } else if (e.detail.type === "STATUS") {
-    if (e.detail.text === "PAUSED") {
+    if (e.detail.text === "PAUSED" || e.detail.text === "OFF") {
       recordButton.ariaLabel = "start recording";
       recordButton.title = "start recording";
 
