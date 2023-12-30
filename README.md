@@ -2,8 +2,7 @@
 
 speech to text functionality with minimum configuration and maximum compatibility and performance.
 
-[Live Demo](https://m-abdi.github.io/voice2text/)
-
+[Live Demo](https://voice2text.mehdiabdi.com/)
 
 ## web example
 
@@ -29,15 +28,17 @@ speech to text functionality with minimum configuration and maximum compatibilit
     "
   >
     <textarea rows="30" cols="100" style=""></textarea>
+    <h1></h1>
     <script>
-      let textarea = document.querySelector("textarea");
       let voice2text = new VoiceToText({
         converter: "vosk",
         language: "en", //   | "en" | "zh" | "ru" | "fr" | "de" | "es" | "pt" | "tr" | "vi" | "it" | "nl" | "ca" | "ar" | "fa" | "uk" | "kk" | "ja" | "eo" | "hi" | "cs" | "pl" | "uz" | "ko" | "br"
         sampleRate: 16000,
       });
 
-      voice2text.start();
+      let textarea = document.querySelector("textarea");
+      let status = document.querySelector("h1");
+      status.innerHTML = voice2text.status;
 
       window.addEventListener("voice", (e) => {
         if (e.detail.type === "PARTIAL") {
@@ -48,12 +49,17 @@ speech to text functionality with minimum configuration and maximum compatibilit
           console.log("final result: ", e.detail.text);
           textarea.value =
             textarea.value.replace(/~.*?~/g, "") + " " + e.detail.text;
+        } else if (e.detail.type === "STATUS") {
+          console.log("status: ", e.detail.text);
+          status.innerHTML = e.detail.text;
         }
       });
 
+      voice2text.start();
+
       setTimeout(() => {
-        voice2text.stop;
-      }, 20000);
+        voice2text.stop(); // or voice2text.pause();
+      }, 60000);
     </script>
   </body>
 </html>
