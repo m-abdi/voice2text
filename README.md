@@ -14,7 +14,7 @@ speech to text functionality with minimum configuration and maximum compatibilit
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>voice2text</title>
     <script
-      src="https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js"
+      src="https://www.unpkg.com/voice2text/dist/voice2text.js"
       type="text/javascript"
     ></script>
   </head>
