@@ -1,6 +1,6 @@
 {
   "name": "voice2text",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "speech to text functionality with minimum configuration and maximum compatibility",
   "main": "dist/voice2text.js",
   "types": "dist/voice2text.d.ts",
@@ -15,7 +15,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-vosk": "cd vosk-browser/lib && npm run build",
     "dev": "npm run build-vosk && webpack serve --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js && cp types/general.d.ts dist/",
+    "build": "webpack --config webpack.prod.js",
+    "postbuild": "cat types/*.d.ts >> dist/voice2text.d.ts && cat dist/*.d.ts >> dist/voice2text.d.ts",
     "build-examples": "npm run build && webpack --config webpack.examples.js && cp pkg/* examples/browser"
   },
   "repository": {
