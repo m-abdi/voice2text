@@ -5,10 +5,12 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   output: {
     library: {
-      name: "VoiceToText",
-      type: "umd",
-      export: ["VoiceToText"],
+      name: "VoiceToText", // The name of the UMD global variable
+      type: "umd", // The module type
+      umdNamedDefine: true,
+      export: "default", // Expose the default export
     },
+    globalObject: "this", // Ensures UMD works in both Node and browser environments
   },
   plugins: [new Dotenv(), new NodePolyfillPlugin()],
   module: {
@@ -38,6 +40,20 @@ module.exports = {
         type: "asset",
         generator: {
           filename: "[name][ext][query]",
+        },
+      },
+      {
+        test: /vosk-worker\.js$/,
+        type: "asset/resource", // Emit a separate file and export the URL
+        generator: {
+          filename: "vosk-worker.js", // Keep the original file name
+        },
+      },
+      {
+        test: /vosk_browser_helper_bg\.wasm$/,
+        type: "asset/resource",
+        generator: {
+          filename: "vosk-helper.wasm",
         },
       },
     ],

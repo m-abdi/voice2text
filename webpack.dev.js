@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = merge(common, {
   mode: "development",
   entry: {
-    index: "./src/index.ts",
+    index: "./src/voice2text.ts",
   },
   output: {
     filename: "[name].js",
