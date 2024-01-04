@@ -1,4 +1,4 @@
-export interface VoiceToText {
+export default interface VoiceToText {
     result: string;
     partialResult: string;
     status: MODEL_STATUS;
@@ -9,6 +9,6 @@ export interface VoiceToText {
         language: LANGUAGE;
     }): void;
 }
-export declare class VoiceToText implements VoiceToText {
+export default class VoiceToText implements VoiceToText {
     constructor(options: Options);
 }

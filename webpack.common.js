@@ -5,11 +5,12 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   output: {
     library: {
-      name: "voice2text",
-      type: "umd",
+      name: "VoiceToText", // The name of the UMD global variable
+      type: "umd", // The module type
+      umdNamedDefine: true,
+      export: "default", // Expose the default export
     },
-    // To prevent error: `Uncaught ReferenceError: self is not defined`
-    globalObject: "this",
+    globalObject: "this", // Ensures UMD works in both Node and browser environments
   },
   plugins: [new Dotenv(), new NodePolyfillPlugin()],
   module: {

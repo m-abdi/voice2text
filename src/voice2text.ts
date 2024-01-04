@@ -1,6 +1,6 @@
 import { VoiceToTextModel, Vosk } from "./models";
 
-export interface VoiceToText {
+export default interface VoiceToText {
   result: string;
   partialResult: string;
   status: MODEL_STATUS;
@@ -9,7 +9,7 @@ export interface VoiceToText {
   stop(): void;
   setLanguage(options: { language: LANGUAGE }): void;
 }
-export class VoiceToText implements VoiceToText {
+export default class VoiceToText implements VoiceToText {
   constructor(options: Options) {
     if (options?.converter === "vosk") {
       return new Vosk({
