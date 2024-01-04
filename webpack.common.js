@@ -5,10 +5,11 @@ const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   output: {
     library: {
-      name: "VoiceToText",
+      name: "voice2text",
       type: "umd",
-      export: ["VoiceToText"],
     },
+    // To prevent error: `Uncaught ReferenceError: self is not defined`
+    globalObject: "this",
   },
   plugins: [new Dotenv(), new NodePolyfillPlugin()],
   module: {
@@ -38,6 +39,20 @@ module.exports = {
         type: "asset",
         generator: {
           filename: "[name][ext][query]",
+        },
+      },
+      {
+        test: /vosk-worker\.js$/,
+        type: "asset/resource", // Emit a separate file and export the URL
+        generator: {
+          filename: "vosk-worker.js", // Keep the original file name
+        },
+      },
+      {
+        test: /vosk_browser_helper_bg\.wasm$/,
+        type: "asset/resource",
+        generator: {
+          filename: "vosk-helper.wasm",
         },
       },
     ],

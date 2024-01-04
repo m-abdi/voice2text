@@ -15,7 +15,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-vosk": "cd vosk-browser/lib && npm run build",
     "dev": "npm run build-vosk && webpack serve --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js && cp types/general.d.ts dist/",
     "build-examples": "npm run build && webpack --config webpack.examples.js && cp pkg/* examples/browser"
   },
   "repository": {
