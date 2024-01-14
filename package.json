@@ -1,6 +1,6 @@
 {
   "name": "voice2text",
-  "version": "0.3.6",
+  "version": "0.3.8",
   "description": "speech to text functionality with minimum configuration and maximum compatibility",
   "main": "dist/voice2text.js",
   "types": "dist/voice2text.d.ts",

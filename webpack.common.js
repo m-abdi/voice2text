@@ -8,7 +8,7 @@ module.exports = {
       name: "VoiceToText", // The name of the UMD global variable
       type: "umd", // The module type
       umdNamedDefine: true,
-      export: "default", // Expose the default export
+      // export: "default", // Expose the default export
     },
     globalObject: "this", // Ensures UMD works in both Node and browser environments
   },

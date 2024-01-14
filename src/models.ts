@@ -31,10 +31,10 @@ const allLanguages: { name: string; code: LANGUAGE; icon: string }[] = [
   { name: "Vietnamese", code: "vi", icon: "" },
 ];
 
-export interface VoiceToTextModel {
+export interface VoiceToTextConverter {
   result: string;
   partialResult: string;
-  status: MODEL_STATUS;
+  status: CONVERTER_STATUS;
   languages: { name: string; code: LANGUAGE; icon: string }[];
   start(): void;
   pause(): void;
@@ -42,7 +42,7 @@ export interface VoiceToTextModel {
   setLanguage(options: { language: LANGUAGE }): void;
 }
 
-export class Vosk implements VoiceToTextModel {
+export class Vosk implements VoiceToTextConverter {
   language: LANGUAGE = undefined;
   private model: Model;
   readonly modelUrl: string;
@@ -82,7 +82,7 @@ export class Vosk implements VoiceToTextModel {
       return this.models?.[item.code] && item;
     });
   private audioContext: AudioContext;
-  status: MODEL_STATUS;
+  status: CONVERTER_STATUS;
   result: string;
   partialResult: string;
 

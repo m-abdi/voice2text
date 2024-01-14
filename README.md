@@ -30,7 +30,7 @@ speech to text functionality with minimum configuration and maximum compatibilit
     <textarea rows="30" cols="100" style=""></textarea>
     <h1></h1>
     <script>
-      let voice2text = new VoiceToText({
+      let voice2text = new VoiceToText.default({
         converter: "vosk",
         language: "en", //   | "en" | "zh" | "ru" | "fr" | "de" | "es" | "pt" | "tr" | "vi" | "it" | "nl" | "ca" | "ar" | "fa" | "uk" | "kk" | "ja" | "eo" | "hi" | "cs" | "pl" | "uz" | "ko" | "br"
         sampleRate: 16000,
@@ -38,7 +38,7 @@ speech to text functionality with minimum configuration and maximum compatibilit
 
       let textarea = document.querySelector("textarea");
       let status = document.querySelector("h1");
-      status.innerHTML = voice2text.status;
+      status.innerHTML = voice2text.converter.status;
 
       window.addEventListener("voice", (e) => {
         if (e.detail.type === "PARTIAL") {

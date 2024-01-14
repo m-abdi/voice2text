@@ -1,7 +1,7 @@
-export interface VoiceToTextModel {
+export interface VoiceToTextConverter {
     result: string;
     partialResult: string;
-    status: MODEL_STATUS;
+    status: CONVERTER_STATUS;
     languages: {
         name: string;
         code: LANGUAGE;
@@ -14,7 +14,7 @@ export interface VoiceToTextModel {
         language: LANGUAGE;
     }): void;
 }
-export declare class Vosk implements VoiceToTextModel {
+export declare class Vosk implements VoiceToTextConverter {
     language: LANGUAGE;
     private model;
     readonly modelUrl: string;
@@ -32,7 +32,7 @@ export declare class Vosk implements VoiceToTextModel {
         icon: string;
     }[];
     private audioContext;
-    status: MODEL_STATUS;
+    status: CONVERTER_STATUS;
     result: string;
     partialResult: string;
     constructor(options?: Options);

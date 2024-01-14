@@ -1,4 +1,4 @@
-let voice2text = new VoiceToText({
+let voice2text = new VoiceToText.default({
   converter: "vosk",
   language: "en",
   sampleRate: 42100,
@@ -7,7 +7,7 @@ const resultTag = document.querySelector("textarea");
 const recordButton = document.querySelector("#mic-button");
 const converterMenu = document.querySelector("#converter-menu");
 const languageMenu = document.querySelector("#language-menu");
-voice2text.languages.map((lang) => {
+voice2text.converter.languages.map((lang) => {
   const option = document.createElement("option");
   option.value = lang.code;
   option.text = lang.name;
@@ -15,7 +15,7 @@ voice2text.languages.map((lang) => {
 });
 
 recordButton.addEventListener("click", () => {
-  if (voice2text.status !== "STARTED") {
+  if (voice2text.converter.status !== "STARTED") {
     voice2text.start();
   } else {
     voice2text.pause();

@@ -1,7 +1,6 @@
-export default interface VoiceToText {
-    result: string;
-    partialResult: string;
-    status: MODEL_STATUS;
+import { VoiceToTextConverter } from "./models";
+export interface VoiceToTextInterface {
+    converter: VoiceToTextConverter;
     start(): void;
     pause(): void;
     stop(): void;
@@ -9,8 +8,15 @@ export default interface VoiceToText {
         language: LANGUAGE;
     }): void;
 }
-export default class VoiceToText implements VoiceToText {
+export default class VoiceToText implements VoiceToTextInterface {
+    converter: VoiceToTextConverter;
     constructor(options: Options);
+    start(): void;
+    stop(): void;
+    pause(): void;
+    setLanguage(options: {
+        language: LANGUAGE;
+    }): void;
 }
 type LANGUAGE =
   | "en"
@@ -40,7 +46,7 @@ type LANGUAGE =
 
 type CONVERTER = "vosk" | "whisper";
 
-type MODEL_STATUS = "OFF" | "LOADING" | "STARTED" | "PAUSED";
+type CONVERTER_STATUS = "OFF" | "LOADING" | "STARTED" | "PAUSED";
 
 interface ResultEvent {
   text: string;
@@ -56,10 +62,10 @@ interface Options {
   modelUrl?: string;
   sampleRate?: number;
 }
-export interface VoiceToTextModel {
+export interface VoiceToTextConverter {
     result: string;
     partialResult: string;
-    status: MODEL_STATUS;
+    status: CONVERTER_STATUS;
     languages: {
         name: string;
         code: LANGUAGE;
@@ -72,7 +78,7 @@ export interface VoiceToTextModel {
         language: LANGUAGE;
     }): void;
 }
-export declare class Vosk implements VoiceToTextModel {
+export declare class Vosk implements VoiceToTextConverter {
     language: LANGUAGE;
     private model;
     readonly modelUrl: string;
@@ -90,7 +96,7 @@ export declare class Vosk implements VoiceToTextModel {
         icon: string;
     }[];
     private audioContext;
-    status: MODEL_STATUS;
+    status: CONVERTER_STATUS;
     result: string;
     partialResult: string;
     constructor(options?: Options);
