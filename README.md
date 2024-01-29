@@ -13,10 +13,6 @@ speech to text functionality with minimum configuration and maximum compatibilit
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>voice2text</title>
-    <script
-      src="https://www.unpkg.com/voice2text/dist/voice2text.js"
-      type="text/javascript"
-    ></script>
   </head>
   <body
     style="
@@ -29,8 +25,9 @@ speech to text functionality with minimum configuration and maximum compatibilit
   >
     <textarea rows="30" cols="100" style=""></textarea>
     <h1></h1>
-    <script>
-      let voice2text = new VoiceToText.default({
+    <script type="module">
+      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js"
+      let voice2text = new VoiceToText({
         converter: "vosk",
         language: "en", //   | "en" | "zh" | "ru" | "fr" | "de" | "es" | "pt" | "tr" | "vi" | "it" | "nl" | "ca" | "ar" | "fa" | "uk" | "kk" | "ja" | "eo" | "hi" | "cs" | "pl" | "uz" | "ko" | "br"
         sampleRate: 16000,
