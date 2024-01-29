@@ -1,4 +1,5 @@
-let voice2text = new VoiceToText.default({
+import VoiceToText from "../../dist/voice2text.js";
+let voice2text = new VoiceToText({
   converter: "vosk",
   language: "en",
   sampleRate: 42100,
