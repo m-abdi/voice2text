@@ -1,4 +1,4 @@
-import { VoiceToTextConverter } from "./models";
+import { VoiceToTextConverter } from "./converters";
 export interface VoiceToTextInterface {
     converter: VoiceToTextConverter;
     start(): void;

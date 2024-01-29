@@ -1,4 +1,4 @@
-import { Vosk, VoiceToTextConverter } from "./models";
+import { Vosk, VoiceToTextConverter } from "./converters";
 
 export interface VoiceToTextInterface {
   converter: VoiceToTextConverter;
