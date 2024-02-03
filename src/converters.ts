@@ -3,6 +3,7 @@ import {
   ServerMessageResult,
 } from "../vosk-browser/lib/dist/interfaces.js";
 import { KaldiRecognizer, Model } from "../vosk-browser/lib/dist/vosk.js";
+import microphone from "./microphone.js";
 
 const allLanguages: { name: string; code: LANGUAGE; icon: string }[] = [
   { name: "English", code: "en", icon: "" },
@@ -133,38 +134,29 @@ export class Vosk implements VoiceToTextConverter {
           this.audioContext = new AudioContext();
         }
         const sampleRate = this.sampleRate;
-        navigator.mediaDevices
-          .getUserMedia({
-            audio: {
-              echoCancellation: true,
-              noiseSuppression: true,
-              channelCount: 1,
-              sampleRate,
-            },
-          })
-          .then((stream) => {
-            this.stream = stream;
-            const source = this.audioContext.createMediaStreamSource(stream);
-            this.source = source;
-            if (!this.processor) {
-              const processor = this.audioContext.createScriptProcessor(
-                1024,
-                1,
-                1,
-              );
-              processor.onaudioprocess = (event) => {
-                try {
-                  this.recognizer.acceptWaveform(event.inputBuffer);
-                } catch (error) {
-                  console.error("acceptWaveform failed", error);
-                }
-              };
-              processor.connect(this.audioContext.destination);
-              this.processor = processor;
-            }
-            source.connect(this.processor);
-            this?.audioContext.resume();
-          });
+        microphone.getMicStream(sampleRate).then((stream) => {
+          this.stream = stream;
+          const source = this.audioContext.createMediaStreamSource(stream);
+          this.source = source;
+          if (!this.processor) {
+            const processor = this.audioContext.createScriptProcessor(
+              1024,
+              1,
+              1,
+            );
+            processor.onaudioprocess = (event) => {
+              try {
+                this.recognizer.acceptWaveform(event.inputBuffer);
+              } catch (error) {
+                console.error("acceptWaveform failed", error);
+              }
+            };
+            processor.connect(this.audioContext.destination);
+            this.processor = processor;
+          }
+          source.connect(this.processor);
+          this?.audioContext.resume();
+        });
         const newStatus = "STARTED";
         this.status = newStatus;
         this.newEvent("STATUS", newStatus);
