@@ -1,3 +1,29 @@
+import * as jsEnv from 'https://cdn.skypack.dev/browser-or-node?dts';
+
+class WebMicrophoneSource {
+    async getStream(sampleRate) {
+        return navigator.mediaDevices.getUserMedia({
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                channelCount: 1,
+                sampleRate,
+            },
+        });
+    }
+}
+class Microphone {
+    constructor(source) {
+        this.source = source ?? new WebMicrophoneSource();
+    }
+    async getMicStream(sampleRate) {
+        if (jsEnv?.isBrowser) {
+            return this.source.getStream(sampleRate);
+        }
+    }
+}
+var microphone = new Microphone();
+
 const allLanguages = [
     { name: "English", code: "en", icon: "" },
     { name: "French", code: "fr", icon: "" },
@@ -93,16 +119,7 @@ class Vosk {
                     this.audioContext = new AudioContext();
                 }
                 const sampleRate = this.sampleRate;
-                navigator.mediaDevices
-                    .getUserMedia({
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        channelCount: 1,
-                        sampleRate,
-                    },
-                })
-                    .then((stream) => {
+                microphone.getMicStream(sampleRate).then((stream) => {
                     this.stream = stream;
                     const source = this.audioContext.createMediaStreamSource(stream);
                     this.source = source;
