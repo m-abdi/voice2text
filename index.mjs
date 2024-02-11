@@ -1,8 +1,8 @@
-import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js";
+import VoiceToText from "../../dist/voice2text.js";
 let voice2text = new VoiceToText({
-  converter: "vosk",
+  converter: "whisper",
   language: "en",
-  sampleRate: 42100,
+  sampleRate: 16000,
 });
 const resultTag = document.querySelector("textarea");
 const recordButton = document.querySelector("#mic-button");
