@@ -1,5 +1,6 @@
-import { Vosk, VoiceToTextConverter } from "./converters";
-
+import { VoiceToTextConverter } from "./converters/index";
+import { Vosk } from "./converters/vosk";
+import { Whisper } from "./converters/whisper";
 export interface VoiceToTextInterface {
   converter: VoiceToTextConverter;
   start(): void;
@@ -13,6 +14,13 @@ export default class VoiceToText implements VoiceToTextInterface {
   constructor(options: Options) {
     if (options?.converter === "vosk") {
       this.converter = new Vosk({
+        converter: options?.converter,
+        language: options?.language,
+        modelUrl: options?.modelUrl,
+        sampleRate: options?.sampleRate,
+      });
+    } else if (options?.converter === "whisper") {
+      this.converter = new Whisper({
         converter: options?.converter,
         language: options?.language,
         modelUrl: options?.modelUrl,
