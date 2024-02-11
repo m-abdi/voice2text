@@ -64,6 +64,18 @@ textarea {
   text-align: center;
 }
 
+video {
+  max-inline-size: 800px;
+  inline-size: 90vw;
+  min-block-size: 400px;
+  border-radius: 20px;
+  overflow-y: auto;
+  resize: none;
+  font-size: 1.3rem;
+  position: relative;
+  text-align: center;
+}
+
 #textarea-container {
   display: flex;
   flex-direction: column;

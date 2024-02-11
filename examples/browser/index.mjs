@@ -67,3 +67,30 @@ document.querySelector("#copy-button").addEventListener("click", () => {
   navigator.clipboard.writeText(resultTag.value);
   alert("Copied.");
 });
+
+const videoElement = document.querySelector("video");
+
+videoElement.addEventListener("play", (e) => {
+  const audioTrack =
+    e.target?.captureStream?.().getAudioTracks?.()?.[0] ??
+    e.target?.mozCaptureStream?.().getAudioTracks?.()?.[0];
+  const audioContext = new AudioContext();
+
+  const source = audioContext.createMediaStreamTrackSource(audioTrack);
+  const scriptNode = audioContext.createScriptProcessor(4096, 1, 1); // Adjust buffer size as needed
+
+  // Process audio data in real-time
+  scriptNode.onaudioprocess = (event) => {
+    const inputBuffer = event.inputBuffer;
+    const channelData = inputBuffer.getChannelData(0); // Raw audio data (Float32Array)
+    // Process channelData as needed (e.g., analyze, visualize, etc.)
+    console.log(channelData);
+  };
+
+  // Connect nodes and start processing
+  source.connect(scriptNode);
+  scriptNode.connect(audioContext.destination);
+  videoElement.addEventListener("pause", (e) => {
+    audioContext.suspend();
+  });
+});

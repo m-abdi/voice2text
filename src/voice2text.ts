@@ -2,6 +2,7 @@ import { Vosk, VoiceToTextConverter } from "./converters";
 
 export interface VoiceToTextInterface {
   converter: VoiceToTextConverter;
+  source?: 'microphone' | 'media'
   start(): void;
   pause(): void;
   stop(): void;

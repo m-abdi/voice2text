@@ -41,6 +41,7 @@ export interface VoiceToTextConverter {
   pause(): void;
   stop(): void;
   setLanguage(options: { language: LANGUAGE }): void;
+  source?: 'MICROPHONE' | 'MEDIA';
 }
 
 export class Vosk implements VoiceToTextConverter {
