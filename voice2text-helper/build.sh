@@ -1,1 +1,1 @@
-wasm-pack build --target web --release
+wasm-pack build --target web --out-name voice2text-helper --release 

@@ -4,7 +4,7 @@ import {
 } from "../../vosk-browser/lib/dist/interfaces.js";
 import { KaldiRecognizer, Model } from "../../vosk-browser/lib/dist/vosk.js";
 import { VoiceToTextConverter, allLanguages } from "./index.js";
-import microphone from "../microphone.js";
+import microphone from "../voice/microphone.js";
 
 export class Vosk implements VoiceToTextConverter {
   language: LANGUAGE = undefined;
@@ -65,7 +65,7 @@ export class Vosk implements VoiceToTextConverter {
       (async () => {
         if (!this.model && !this.recognizer && !this.audioContext) {
           const { createModel } = await import(
-            /* webpackChunkName: "vosk" */ "../../vosk-browser/lib/dist/vosk.js"
+            "../../vosk-browser/lib/dist/vosk.js"
           );
           const model: Model = await createModel(
             this.language ? this.models[this.language] : this.modelUrl,
