@@ -4,6 +4,19 @@ let voice2text = new VoiceToText({
   language: "en",
   sampleRate: 42100,
 });
+let voice2text_video = new VoiceToText({
+  id: "video",
+  converter: "vosk",
+  language: "en",
+  source: "video",
+});
+
+let voice2text_audio = new VoiceToText({
+  converter: "vosk",
+  language: "en",
+  source: "audio",
+});
+
 const resultTag = document.querySelector("textarea");
 const recordButton = document.querySelector("#mic-button");
 const converterMenu = document.querySelector("#converter-menu");
@@ -23,6 +36,17 @@ recordButton.addEventListener("click", () => {
   }
 });
 
+// preload required assets
+voice2text_video.init();
+
+document.querySelector("audio").addEventListener("play", (e) => {
+  voice2text_audio.start();
+});
+
+document.querySelector("audio").addEventListener("pause", (e) => {
+  voice2text_audio.pause();
+});
+
 converterMenu.addEventListener("change", (e) => {
   console.log(e.target.value);
 });
@@ -35,12 +59,14 @@ languageMenu.addEventListener("change", (e) => {
 
 window.addEventListener("voice", (e) => {
   console.log(e.detail);
-  if (e.detail.type === "PARTIAL") {
+  if (e.detail.type === "PARTIAL" && e.detail?.id !== "video") {
     resultTag.value =
       resultTag.value.replace(/~.*?~/g, "") + `~${e.detail.text}~`;
-  } else if (e.detail.type === "FINAL") {
+    resultTag.scrollTop = resultTag.scrollHeight;
+  } else if (e.detail.type === "FINAL" && e.detail?.id !== "video") {
     resultTag.value =
       resultTag.value.replace(/~.*?~/g, "") + " " + e.detail.text;
+    resultTag.scrollTop = resultTag.scrollHeight;
   } else if (e.detail.type === "STATUS") {
     if (e.detail.text === "PAUSED" || e.detail.text === "OFF") {
       recordButton.ariaLabel = "start recording";
@@ -66,31 +92,4 @@ window.addEventListener("voice", (e) => {
 document.querySelector("#copy-button").addEventListener("click", () => {
   navigator.clipboard.writeText(resultTag.value);
   alert("Copied.");
-});
-
-const videoElement = document.querySelector("video");
-
-videoElement.addEventListener("play", (e) => {
-  const audioTrack =
-    e.target?.captureStream?.().getAudioTracks?.()?.[0] ??
-    e.target?.mozCaptureStream?.().getAudioTracks?.()?.[0];
-  const audioContext = new AudioContext();
-
-  const source = audioContext.createMediaStreamTrackSource(audioTrack);
-  const scriptNode = audioContext.createScriptProcessor(4096, 1, 1); // Adjust buffer size as needed
-
-  // Process audio data in real-time
-  scriptNode.onaudioprocess = (event) => {
-    const inputBuffer = event.inputBuffer;
-    const channelData = inputBuffer.getChannelData(0); // Raw audio data (Float32Array)
-    // Process channelData as needed (e.g., analyze, visualize, etc.)
-    console.log(channelData);
-  };
-
-  // Connect nodes and start processing
-  source.connect(scriptNode);
-  scriptNode.connect(audioContext.destination);
-  videoElement.addEventListener("pause", (e) => {
-    audioContext.suspend();
-  });
 });
