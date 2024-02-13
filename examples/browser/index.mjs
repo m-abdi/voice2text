@@ -4,6 +4,19 @@ let voice2text = new VoiceToText({
   language: "en",
   sampleRate: 42100,
 });
+let voice2text_video = new VoiceToText({
+  id: "video",
+  converter: "vosk",
+  language: "en",
+  source: "video",
+});
+
+let voice2text_audio = new VoiceToText({
+  converter: "vosk",
+  language: "en",
+  source: "audio",
+});
+
 const resultTag = document.querySelector("textarea");
 const recordButton = document.querySelector("#mic-button");
 const converterMenu = document.querySelector("#converter-menu");
@@ -23,6 +36,17 @@ recordButton.addEventListener("click", () => {
   }
 });
 
+// preload required assets
+voice2text_video.init();
+
+document.querySelector("audio").addEventListener("play", (e) => {
+  voice2text_audio.start();
+});
+
+document.querySelector("audio").addEventListener("pause", (e) => {
+  voice2text_audio.pause();
+});
+
 converterMenu.addEventListener("change", (e) => {
   console.log(e.target.value);
 });
@@ -35,12 +59,14 @@ languageMenu.addEventListener("change", (e) => {
 
 window.addEventListener("voice", (e) => {
   console.log(e.detail);
-  if (e.detail.type === "PARTIAL") {
+  if (e.detail.type === "PARTIAL" && e.detail?.id !== "video") {
     resultTag.value =
       resultTag.value.replace(/~.*?~/g, "") + `~${e.detail.text}~`;
-  } else if (e.detail.type === "FINAL") {
+    resultTag.scrollTop = resultTag.scrollHeight;
+  } else if (e.detail.type === "FINAL" && e.detail?.id !== "video") {
     resultTag.value =
       resultTag.value.replace(/~.*?~/g, "") + " " + e.detail.text;
+    resultTag.scrollTop = resultTag.scrollHeight;
   } else if (e.detail.type === "STATUS") {
     if (e.detail.text === "PAUSED" || e.detail.text === "OFF") {
       recordButton.ariaLabel = "start recording";

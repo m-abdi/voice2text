@@ -16,7 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-vosk": "cd vosk-browser/lib && npm run build",
     "build": "rollup --config rollup.config.js",
-    "postbuild": "cat types/*.d.ts >> dist/voice2text.d.ts && cat dist/converters.d.ts >> dist/voice2text.d.ts && rm dist/converters.d.ts"
+    "postbuild": "cat types/*.d.ts >> dist/voice2text.d.ts && rm -r dist/voice && rm -r dist/converters"
   },
   "repository": {
     "type": "git",

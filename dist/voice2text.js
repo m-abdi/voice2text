@@ -1,29 +1,5 @@
 import * as jsEnv from 'https://cdn.skypack.dev/browser-or-node?dts';
 
-class WebMicrophoneSource {
-    async getStream(sampleRate) {
-        return navigator.mediaDevices.getUserMedia({
-            audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                channelCount: 1,
-                sampleRate,
-            },
-        });
-    }
-}
-class Microphone {
-    constructor(source) {
-        this.source = source ?? new WebMicrophoneSource();
-    }
-    async getMicStream(sampleRate) {
-        if (jsEnv?.isBrowser) {
-            return this.source.getStream(sampleRate);
-        }
-    }
-}
-var microphone = new Microphone();
-
 const allLanguages = [
     { name: "English", code: "en", icon: "" },
     { name: "French", code: "fr", icon: "" },
@@ -50,6 +26,90 @@ const allLanguages = [
     { name: "Uzbek", code: "uz", icon: "" },
     { name: "Vietnamese", code: "vi", icon: "" },
 ];
+
+class WebMicrophoneSource {
+    async getStream(sampleRate) {
+        return navigator.mediaDevices.getUserMedia({
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                channelCount: 1,
+                sampleRate,
+            },
+        });
+    }
+}
+class Microphone {
+    constructor(source) {
+        this.source = source ?? new WebMicrophoneSource();
+    }
+    async getMicStream(sampleRate) {
+        if (jsEnv?.isBrowser) {
+            return this.source.getStream(sampleRate);
+        }
+    }
+}
+var microphone = new Microphone();
+
+class Media {
+    constructor(elementOrSelector) {
+        if (typeof elementOrSelector === "string") {
+            this.sourceElement = document.querySelector(elementOrSelector);
+        }
+        else {
+            this.sourceElement = elementOrSelector;
+        }
+    }
+    async getStream() {
+        return (this.sourceElement?.captureStream?.() ??
+            this.sourceElement?.mozCaptureStream?.());
+    }
+}
+
+class Caption {
+    constructor(element) {
+        this.element = element;
+    }
+    addCaption(label, lang, text, endTime) {
+        let track = this.element.addTextTrack("captions", label, lang);
+        track.mode = "showing";
+        this.track = track;
+        this.addText(0, endTime ?? 2, text ?? "Captioned by voice2text!");
+    }
+    addText(startTime, endTime, captionText) {
+        this.lastCue && this.track.removeCue(this.lastCue);
+        this.lastCue = new VTTCue(startTime, endTime, captionText);
+        this.track.addCue(this.lastCue);
+    }
+    clearCaption() {
+        try {
+            this.lastCue && this.track.removeCue(this.lastCue);
+        }
+        catch { }
+    }
+}
+
+function process(thisObject, stream) {
+    thisObject.stream = stream;
+    const source = thisObject.audioContext.createMediaStreamSource(stream);
+    thisObject.audioSource = source;
+    if (!thisObject.processor) {
+        const processor = thisObject.audioContext.createScriptProcessor(1024, 1, 1);
+        processor.onaudioprocess = (event) => {
+            try {
+                thisObject.recognizer.acceptWaveform(event.inputBuffer);
+            }
+            catch (error) {
+                console.error("acceptWaveform failed", error);
+            }
+        };
+        processor.connect(thisObject.audioContext.destination);
+        thisObject.processor = processor;
+    }
+    source.connect(thisObject.processor);
+    thisObject?.audioContext.resume();
+}
+
 class Vosk {
     constructor(options) {
         this.language = undefined;
@@ -82,73 +142,92 @@ class Vosk {
         this.languages = allLanguages.filter((item) => {
             return this.models?.[item.code] && item;
         });
+        this.id = options?.id;
         this.language = options?.language;
         this.modelUrl = options?.modelUrl;
         this.sampleRate = options?.sampleRate ?? 16000;
         this.status = "OFF";
+        this.source =
+            !options.source || options?.source === "microphone"
+                ? "microphone"
+                : options.source;
     }
-    start() {
-        if (this.status !== "LOADING") {
-            const newStatus = "LOADING";
-            this.status = newStatus;
-            this.newEvent("STATUS", newStatus);
-            (async () => {
-                if (!this.model && !this.recognizer && !this.audioContext) {
-                    const { createModel } = await import(
-                    /* webpackChunkName: "vosk" */ './vosk.js');
-                    const model = await createModel(this.language ? this.models[this.language] : this.modelUrl);
-                    model.setLogLevel(-2);
-                    const recognizer = new model.KaldiRecognizer(this.sampleRate);
-                    // recognizer.setWords(true);
-                    this.model = model;
-                    this.recognizer = recognizer;
-                    recognizer.on("result", (message) => {
-                        const result = message.result.text;
-                        if (result && this.result !== result) {
-                            this.result = result;
-                            this.newEvent("FINAL", result);
-                        }
-                    });
-                    recognizer.on("partialresult", (message) => {
-                        const partial = message.result.partial;
-                        if (partial && this.partialResult !== partial) {
-                            this.partialResult = partial;
-                            this.newEvent("PARTIAL", partial);
-                        }
-                    });
-                    this.audioContext = new AudioContext();
-                }
-                const sampleRate = this.sampleRate;
-                microphone.getMicStream(sampleRate).then((stream) => {
-                    this.stream = stream;
-                    const source = this.audioContext.createMediaStreamSource(stream);
-                    this.source = source;
-                    if (!this.processor) {
-                        const processor = this.audioContext.createScriptProcessor(1024, 1, 1);
-                        processor.onaudioprocess = (event) => {
-                            try {
-                                this.recognizer.acceptWaveform(event.inputBuffer);
-                            }
-                            catch (error) {
-                                console.error("acceptWaveform failed", error);
-                            }
-                        };
-                        processor.connect(this.audioContext.destination);
-                        this.processor = processor;
-                    }
-                    source.connect(this.processor);
-                    this?.audioContext.resume();
-                });
-                const newStatus = "STARTED";
+    async init() {
+        try {
+            if (!this.model &&
+                !this.recognizer &&
+                !this.audioContext &&
+                this.status !== "LOADING") {
+                let newStatus = "LOADING";
                 this.status = newStatus;
                 this.newEvent("STATUS", newStatus);
-            })();
+                const { createModel } = await import('./vosk.js');
+                const model = await createModel(this.language ? this.models[this.language] : this.modelUrl);
+                model.setLogLevel(-2);
+                const recognizer = new model.KaldiRecognizer(this.sampleRate);
+                // recognizer.setWords(true);
+                this.model = model;
+                this.recognizer = recognizer;
+                recognizer.on("result", (message) => {
+                    const result = message.result.text;
+                    if (result && this.result !== result) {
+                        this.result = result;
+                        this.newEvent("FINAL", result);
+                    }
+                });
+                recognizer.on("partialresult", (message) => {
+                    const partial = message.result.partial;
+                    if (partial && this.partialResult !== partial) {
+                        this.partialResult = partial;
+                        this.newEvent("PARTIAL", partial);
+                    }
+                });
+                this.audioContext = new AudioContext();
+                if (model) {
+                    newStatus = "LOADED";
+                    this.status = newStatus;
+                    this.newEvent("STATUS", newStatus);
+                }
+            }
+            return true;
+        }
+        catch (e) {
+            console.error(e);
+            return false;
         }
     }
+    async start() {
+        if (this.status !== "LOADING") {
+            await this.init();
+        }
+        else {
+            this.delayedStart = true;
+            this.caption = new Caption(this.source);
+            this.caption.addCaption(`${this.language?.toUpperCase() ?? "ENGLISH"}-voice2text`, this.language ?? "en", "Loading voice2text...", this.source?.duration);
+            return;
+        }
+        const sampleRate = this.sampleRate;
+        if (this.source === "microphone") {
+            microphone
+                .getMicStream(sampleRate)
+                .then((stream) => process(this, stream));
+        }
+        else {
+            if (!this.caption) {
+                this.caption = new Caption(this.source);
+            }
+            const mediaClient = new Media(this.source);
+            const r = await mediaClient.getStream();
+            process(this, r);
+        }
+        const newStatus = "STARTED";
+        this.status = newStatus;
+        this.newEvent("STATUS", newStatus);
+    }
     pause() {
-        this.audioContext.suspend().then(() => {
+        this?.audioContext?.suspend?.().then(() => {
             this.stream.getAudioTracks()[0].stop();
-            this.source.disconnect(this.processor);
+            this.audioSource.disconnect(this.processor);
             const newStatus = "PAUSED";
             this.status = newStatus;
             this.newEvent("STATUS", newStatus);
@@ -156,7 +235,7 @@ class Vosk {
     }
     stop() {
         this.audioContext &&
-            this.audioContext.close().then(() => {
+            this?.audioContext?.close?.().then(() => {
                 this.stream.getAudioTracks()[0].stop();
                 // this.source.disconnect(this.processor);
                 this.model.terminate();
@@ -166,7 +245,7 @@ class Vosk {
                 this.model = undefined;
                 this.recognizer = undefined;
                 this.audioContext = undefined;
-                this.source = undefined;
+                this.audioSource = undefined;
                 this.processor = undefined;
                 this.stream = undefined;
             });
@@ -180,9 +259,22 @@ class Vosk {
             detail: {
                 text,
                 type,
+                id: this.id,
             },
         });
         window.dispatchEvent(event);
+        if (type === "STATUS" && text === "LOADED" && this?.delayedStart) {
+            this.start();
+        }
+        if (this.source !== "microphone") {
+            if (text === "STARTED") {
+                !this.caption.track &&
+                    this.caption.addCaption(`${this.language?.toUpperCase() ?? "ENGLISH"}-voice2text`, this.language ?? "en");
+            }
+            else if (type === "PARTIAL" || type === "FINAL") {
+                this.caption.addText(0, this.source?.duration, text);
+            }
+        }
     }
     async trackFetchProgress(response, handler, interval = 1500) {
         const reader = response.body.getReader();
@@ -209,17 +301,40 @@ class Vosk {
 
 class VoiceToText {
     constructor(options) {
+        this.id =
+            options?.id ??
+                crypto.getRandomValues(new Uint8Array(16)).toString().replace(/,/g, "");
+        // find source
+        if (typeof options.source === "string" && options.source !== "microphone") {
+            this.source = document.querySelector(options.source);
+        }
+        else {
+            this.source = this.source;
+        }
         if (options?.converter === "vosk") {
             this.converter = new Vosk({
+                id: this.id,
                 converter: options?.converter,
                 language: options?.language,
                 modelUrl: options?.modelUrl,
                 sampleRate: options?.sampleRate,
+                source: this.source,
             });
         }
         else {
             alert("Invalid Converter!");
         }
+        if (this.source !== "microphone" && this.source) {
+            this.source.addEventListener("play", (e) => {
+                this.start();
+            });
+            this.source.addEventListener("pause", (e) => {
+                this.pause();
+            });
+        }
+    }
+    async init() {
+        return this.converter.init();
     }
     start() {
         return this.converter.start();

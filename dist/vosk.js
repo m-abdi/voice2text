@@ -670,7 +670,7 @@ async function __wbg_init(input) {
   if (wasm !== undefined) return wasm;
 
   if (typeof input === "undefined") {
-    input = new URL(new URL('vosk-browser-helper_bg.wasm', import.meta.url).href, import.meta.url);
+    input = new URL(new URL('voice2text-helper_bg.wasm', import.meta.url).href, import.meta.url);
   }
   const imports = __wbg_get_imports();
 
@@ -702,7 +702,7 @@ class Model extends EventTarget {
                 .then(blob => {
                 const blobURL = URL.createObjectURL(blob);
                 this.worker = new Worker(blobURL, { name: new URL(new URL('vosk.wasm', import.meta.url).href, import.meta.url).toString(), type: "module" });
-                URL.revokeObjectURL(blobURL);
+                // URL.revokeObjectURL(blobURL);
                 this.initialize();
             })
                 .catch(error => {

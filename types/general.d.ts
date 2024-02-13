@@ -26,7 +26,7 @@ type LANGUAGE =
 
 type CONVERTER = "vosk" | "whisper";
 
-type CONVERTER_STATUS = "OFF" | "LOADING" | "STARTED" | "PAUSED";
+type CONVERTER_STATUS = "OFF" | "LOADING" | "LOADED" | "STARTED" | "PAUSED";
 
 interface ResultEvent {
   text: string;
@@ -37,8 +37,12 @@ interface PartialResultEvent {
 }
 
 interface Options {
+  id?: string;
   converter?: CONVERTER;
   language?: LANGUAGE;
   modelUrl?: string;
   sampleRate?: number;
+  source?: VoiceSource;
 }
+
+type VoiceSource = "microphone" | Element | string;
