@@ -1,3 +1,6 @@
 [submodule "vosk-browser"]
 	path = vosk-browser
 	url = https://github.com/m-abdi/vosk-browser
+[submodule "candle"]
+	path = candle
+	url = https://github.com/m-abdi/candle
