@@ -2,7 +2,7 @@ import { VoiceToTextConverter } from "./converters/index";
 export interface VoiceToTextInterface {
     converter: VoiceToTextConverter;
     init(): Promise<boolean>;
-    start(): void;
+    start(): Promise<void>;
     pause(): void;
     stop(): void;
     setLanguage(options: {
@@ -15,7 +15,7 @@ export default class VoiceToText implements VoiceToTextInterface {
     source?: VoiceSource;
     constructor(options: Options);
     init(): Promise<boolean>;
-    start(): void;
+    start(): Promise<void>;
     stop(): void;
     pause(): void;
     setLanguage(options: {
@@ -69,4 +69,4 @@ interface Options {
   source?: VoiceSource;
 }
 
-type VoiceSource = 'microphone' | Element | string;
+type VoiceSource = "microphone" | Element | string;

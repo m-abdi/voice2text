@@ -311,7 +311,7 @@ class VoiceToText {
         else {
             this.source = this.source;
         }
-        if (options?.converter === "vosk") {
+        if (!options?.converter || options?.converter === "vosk") {
             this.converter = new Vosk({
                 id: this.id,
                 converter: options?.converter,
@@ -336,7 +336,7 @@ class VoiceToText {
     async init() {
         return this.converter.init();
     }
-    start() {
+    async start() {
         return this.converter.start();
     }
     stop() {

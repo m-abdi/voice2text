@@ -23,7 +23,7 @@ export default class VoiceToText implements VoiceToTextInterface {
     } else {
       this.source = this.source;
     }
-    if (options?.converter === "vosk") {
+    if (!options?.converter || options?.converter === "vosk") {
       this.converter = new Vosk({
         id: this.id,
         converter: options?.converter,
