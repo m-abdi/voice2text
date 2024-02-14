@@ -1,4 +1,3 @@
-import * as jsEnv from "https://cdn.skypack.dev/browser-or-node?dts";
 import { VoiceSource } from ".";
 
 class WebMicrophoneSource implements VoiceSource {
@@ -21,7 +20,7 @@ export class Microphone {
   }
 
   async getMicStream(sampleRate: number) {
-    if (jsEnv?.isBrowser) {
+    if (true) {
       return this.source.getStream(sampleRate);
     }
   }

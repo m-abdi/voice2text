@@ -1,5 +1,3 @@
-import * as jsEnv from 'https://cdn.skypack.dev/browser-or-node?dts';
-
 const allLanguages = [
     { name: "English", code: "en", icon: "" },
     { name: "French", code: "fr", icon: "" },
@@ -44,7 +42,7 @@ class Microphone {
         this.source = source ?? new WebMicrophoneSource();
     }
     async getMicStream(sampleRate) {
-        if (jsEnv?.isBrowser) {
+        {
             return this.source.getStream(sampleRate);
         }
     }
