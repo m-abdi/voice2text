@@ -1,4 +1,4 @@
-import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js";
+import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text@latest/dist/voice2text.js";
 let voice2text = new VoiceToText({
   converter: "vosk",
   language: "en",

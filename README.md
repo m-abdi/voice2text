@@ -101,7 +101,7 @@ window.addEventListener("voice", (e) => {
     <textarea rows="30" cols="100" style=""></textarea>
     <h1></h1>
     <script type="module">
-      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js";
+      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text@latest/dist/voice2text.js";
       let voice2text = new VoiceToText({
         converter: "vosk",
         language: "en",
@@ -164,7 +164,7 @@ window.addEventListener("voice", (e) => {
     </video>
     <h1></h1>
     <script type="module">
-      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js";
+      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text@latest/dist/voice2text.js";
       let voice2text_video = new VoiceToText({
         converter: "vosk",
         language: "en",
@@ -208,7 +208,7 @@ window.addEventListener("voice", (e) => {
     <textarea rows="30" cols="100" style=""></textarea>
     <h1></h1>
     <script type="module">
-      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text/dist/voice2text.js";
+      import VoiceToText from "https://cdn.jsdelivr.net/npm/voice2text@latest/dist/voice2text.js";
       let voice2text_audio = new VoiceToText({
         converter: "vosk",
         language: "en",
