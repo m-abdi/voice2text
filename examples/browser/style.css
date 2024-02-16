@@ -67,8 +67,19 @@ textarea {
 video {
   max-inline-size: 800px;
   inline-size: 90vw;
-  min-block-size: 400px;
   border-radius: 20px;
+}
+
+@media (max-width: 600px) {
+  video {
+    max-block-size: 400px;
+  }
+}
+
+@media (min-width: 600px) {
+  video {
+    min-block-size: 400px;
+  }
 }
 
 audio {
