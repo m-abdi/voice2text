@@ -158,7 +158,7 @@ window.addEventListener("voice", (e) => {
   >
     <video crossorigin="anonymous" controls>
       <source
-        src="https://github.com/m-abdi/voice2text/raw/main/examples/browser/media/Watch%20Sir%20David%20Attenborough%20s%20powerful%20speech%20to%20leaders%20at%20COP26.mp4"
+        src="https://voice2text.mehdiabdi.com/media/Watch%20Sir%20David%20Attenborough%20s%20powerful%20speech%20to%20leaders%20at%20COP26.mp4"
         type="video/mp4"
       />
     </video>
@@ -201,7 +201,7 @@ window.addEventListener("voice", (e) => {
   >
     <audio crossorigin="anonymous" controls>
       <source
-        src="https://github.com/m-abdi/voice2text/raw/main/examples/browser/media/Watch%20Sir%20David%20Attenborough%20s%20powerful%20speech%20to%20leaders%20at%20COP26.mp3"
+        src="https://voice2text.mehdiabdi.com/media/Watch%20Sir%20David%20Attenborough%20s%20powerful%20speech%20to%20leaders%20at%20COP26.mp3"
         type="audio/mpeg"
       />
     </audio>

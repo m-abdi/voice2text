@@ -29,7 +29,8 @@
     "asr",
     "speech to text",
     "wasm",
-    "voice to text"
+    "voice to text",
+    "webvtt"
   ],
   "author": "Mehdi Abdi",
   "license": "MIT",
