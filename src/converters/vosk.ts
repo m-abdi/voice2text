@@ -95,10 +95,8 @@ export class Vosk implements VoiceToTextConverter {
         this.recognizer = recognizer;
         recognizer.on("result", (message: ServerMessageResult) => {
           const result = message.result.text;
-          if (result && this.result !== result) {
-            this.result = result;
-            this.newEvent("FINAL", result);
-          }
+          this.result = result;
+          this.newEvent("FINAL", result);
         });
         recognizer.on(
           "partialresult",
