@@ -152,13 +152,8 @@ class Vosk {
     }
     async init() {
         try {
-            if (!this.model &&
-                !this.recognizer &&
-                !this.audioContext &&
-                this.status !== "LOADING") {
-                let newStatus = "LOADING";
-                this.status = newStatus;
-                this.newEvent("STATUS", newStatus);
+            if (!this.model && !this.recognizer && !this.audioContext) {
+                this.newEvent("STATUS", "LOADING");
                 const { createModel } = await import('./vosk.js');
                 const model = await createModel(this.language ? this.models[this.language] : this.modelUrl);
                 model.setLogLevel(-2);
@@ -168,7 +163,7 @@ class Vosk {
                 this.recognizer = recognizer;
                 recognizer.on("result", (message) => {
                     const result = message.result.text;
-                    if (result && this.result !== result) {
+                    if (result) {
                         this.result = result;
                         this.newEvent("FINAL", result);
                     }
@@ -182,9 +177,7 @@ class Vosk {
                 });
                 this.audioContext = new AudioContext();
                 if (model) {
-                    newStatus = "LOADED";
-                    this.status = newStatus;
-                    this.newEvent("STATUS", newStatus);
+                    this.newEvent("STATUS", "LOADED");
                 }
             }
             return true;
@@ -195,40 +188,43 @@ class Vosk {
         }
     }
     async start() {
-        if (this.status !== "LOADING") {
+        if (this.status === "OFF") {
             await this.init();
         }
-        else {
+        else if (this.status === "LOADING") {
             this.delayedStart = true;
-            this.caption = new Caption(this.source);
-            this.caption.addCaption(`${this.language?.toUpperCase() ?? "ENGLISH"}-voice2text`, this.language ?? "en", "Loading voice2text...", this.source?.duration);
+            try {
+                this.caption = new Caption(this.source);
+                this.caption.addCaption(`${this.language?.toUpperCase() ?? "ENGLISH"}-voice2text`, this.language ?? "en", "Loading voice2text...", this.source?.duration);
+            }
+            catch (e) {
+                console.log(e);
+            }
             return;
         }
-        const sampleRate = this.sampleRate;
-        if (this.source === "microphone") {
-            microphone
-                .getMicStream(sampleRate)
-                .then((stream) => process(this, stream));
-        }
-        else {
-            if (!this.caption) {
-                this.caption = new Caption(this.source);
+        if (this.status === "LOADED" || this.status === "PAUSED") {
+            const sampleRate = this.sampleRate;
+            if (this.source === "microphone") {
+                microphone
+                    .getMicStream(sampleRate)
+                    .then((stream) => process(this, stream));
             }
-            const mediaClient = new Media(this.source);
-            const r = await mediaClient.getStream();
-            process(this, r);
+            else {
+                if (!this.caption) {
+                    this.caption = new Caption(this.source);
+                }
+                const mediaClient = new Media(this.source);
+                const r = await mediaClient.getStream();
+                process(this, r);
+            }
+            this.newEvent("STATUS", "STARTED");
         }
-        const newStatus = "STARTED";
-        this.status = newStatus;
-        this.newEvent("STATUS", newStatus);
     }
     pause() {
         this?.audioContext?.suspend?.().then(() => {
             this.stream.getAudioTracks()[0].stop();
             this.audioSource.disconnect(this.processor);
-            const newStatus = "PAUSED";
-            this.status = newStatus;
-            this.newEvent("STATUS", newStatus);
+            this.newEvent("STATUS", "PAUSED");
         });
     }
     stop() {
@@ -237,9 +233,7 @@ class Vosk {
                 this.stream.getAudioTracks()[0].stop();
                 // this.source.disconnect(this.processor);
                 this.model.terminate();
-                const newStatus = "OFF";
-                this.status = newStatus;
-                this.newEvent("STATUS", newStatus);
+                this.newEvent("STATUS", "OFF");
                 this.model = undefined;
                 this.recognizer = undefined;
                 this.audioContext = undefined;
@@ -253,6 +247,9 @@ class Vosk {
         this.language = options?.language;
     }
     newEvent(type, text) {
+        if (type === "STATUS") {
+            this.status = text;
+        }
         const event = new CustomEvent("voice", {
             detail: {
                 text,

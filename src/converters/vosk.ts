@@ -71,15 +71,8 @@ export class Vosk implements VoiceToTextConverter {
 
   async init(): Promise<boolean> {
     try {
-      if (
-        !this.model &&
-        !this.recognizer &&
-        !this.audioContext &&
-        this.status !== "LOADING"
-      ) {
-        let newStatus = "LOADING" as CONVERTER_STATUS;
-        this.status = newStatus;
-        this.newEvent("STATUS", newStatus);
+      if (!this.model && !this.recognizer && !this.audioContext) {
+        this.newEvent("STATUS", "LOADING");
         const { createModel } = await import(
           "../../vosk-browser/lib/dist/vosk.js"
         );
@@ -95,8 +88,10 @@ export class Vosk implements VoiceToTextConverter {
         this.recognizer = recognizer;
         recognizer.on("result", (message: ServerMessageResult) => {
           const result = message.result.text;
-          this.result = result;
-          this.newEvent("FINAL", result);
+          if (result) {
+            this.result = result;
+            this.newEvent("FINAL", result);
+          }
         });
         recognizer.on(
           "partialresult",
@@ -110,9 +105,7 @@ export class Vosk implements VoiceToTextConverter {
         );
         this.audioContext = new AudioContext();
         if (model) {
-          newStatus = "LOADED";
-          this.status = newStatus;
-          this.newEvent("STATUS", newStatus);
+          this.newEvent("STATUS", "LOADED");
         }
       }
       return true;
@@ -123,45 +116,48 @@ export class Vosk implements VoiceToTextConverter {
   }
 
   async start() {
-    if (this.status !== "LOADING") {
+    if (this.status === "OFF") {
       await this.init();
-    } else {
+    } else if (this.status === "LOADING") {
       this.delayedStart = true;
-      this.caption = new Caption(this.source as any);
-      this.caption.addCaption(
-        `${this.language?.toUpperCase() ?? "ENGLISH"}-voice2text`,
-        this.language ?? "en",
-        "Loading voice2text...",
-        (this.source as any)?.duration,
-      );
+      try {
+        this.caption = new Caption(this.source as any);
+        this.caption.addCaption(
+          `${this.language?.toUpperCase() ?? "ENGLISH"}-voice2text`,
+          this.language ?? "en",
+          "Loading voice2text...",
+          (this.source as any)?.duration,
+        );
+      } catch (e) {
+        console.log(e);
+      }
       return;
     }
-    const sampleRate = this.sampleRate;
 
-    if (this.source === "microphone") {
-      microphone
-        .getMicStream(sampleRate)
-        .then((stream) => process(this, stream));
-    } else {
-      if (!this.caption) {
-        this.caption = new Caption(this.source as any);
+    if (this.status === "LOADED" || this.status === "PAUSED") {
+      const sampleRate = this.sampleRate;
+
+      if (this.source === "microphone") {
+        microphone
+          .getMicStream(sampleRate)
+          .then((stream) => process(this, stream));
+      } else {
+        if (!this.caption) {
+          this.caption = new Caption(this.source as any);
+        }
+        const mediaClient = new media(this.source);
+        const r = await mediaClient.getStream();
+        process(this, r);
       }
-      const mediaClient = new media(this.source);
-      const r = await mediaClient.getStream();
-      process(this, r);
+      this.newEvent("STATUS", "STARTED");
     }
-    const newStatus = "STARTED";
-    this.status = newStatus;
-    this.newEvent("STATUS", newStatus);
   }
 
   pause(): void {
     this?.audioContext?.suspend?.().then(() => {
       this.stream.getAudioTracks()[0].stop();
       this.audioSource.disconnect(this.processor);
-      const newStatus = "PAUSED";
-      this.status = newStatus;
-      this.newEvent("STATUS", newStatus);
+      this.newEvent("STATUS", "PAUSED");
     });
   }
 
@@ -172,9 +168,7 @@ export class Vosk implements VoiceToTextConverter {
         // this.source.disconnect(this.processor);
         this.model.terminate();
 
-        const newStatus = "OFF";
-        this.status = newStatus;
-        this.newEvent("STATUS", newStatus);
+        this.newEvent("STATUS", "OFF");
 
         this.model = undefined;
         this.recognizer = undefined;
@@ -191,6 +185,9 @@ export class Vosk implements VoiceToTextConverter {
   }
 
   newEvent(type: "FINAL" | "PARTIAL" | "STATUS", text: string) {
+    if (type === "STATUS") {
+      this.status = text as CONVERTER_STATUS;
+    }
     const event = new CustomEvent("voice", {
       detail: {
         text,
