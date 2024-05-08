@@ -304,7 +304,7 @@ class VoiceToText {
             this.source = document.querySelector(options.source);
         }
         else {
-            this.source = this.source;
+            this.source = options.source;
         }
         if (!options?.converter || options?.converter === "vosk") {
             this.converter = new Vosk({
