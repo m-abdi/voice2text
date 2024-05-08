@@ -21,7 +21,7 @@ export default class VoiceToText implements VoiceToTextInterface {
     if (typeof options.source === "string" && options.source !== "microphone") {
       this.source = document.querySelector(options.source);
     } else {
-      this.source = this.source;
+      this.source = options.source;
     }
     if (!options?.converter || options?.converter === "vosk") {
       this.converter = new Vosk({
