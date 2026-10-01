@@ -136,6 +136,14 @@ class Vosk {
             ko: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-ko-0.22.zip",
             br: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-br-0.8.zip",
             fa: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-fa-0.42.zip",
+            el: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-el-gr-0.7.zip",
+            sv: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-sv-rhasspy-0.15.zip",
+            gu: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-gu-0.42.zip",
+            tg: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-tg-0.22.zip",
+            te: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-te-0.42.zip",
+            ky: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-ky-0.42.zip",
+            ka: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-ka-0.42.zip",
+            tl: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-tl-ph-generic-0.6.zip",
         };
         this.languages = allLanguages.filter((item) => {
             return this.models?.[item.code] && item;

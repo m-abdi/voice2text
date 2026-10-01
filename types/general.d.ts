@@ -22,9 +22,19 @@ type LANGUAGE =
   | "pl"
   | "uz"
   | "ko"
-  | "br";
+  | "br"
+  | "en-in"
+  | "el"
+  | "ar-tn"
+  | "tl"
+  | "sv"
+  | "gu"
+  | "tg"
+  | "te"
+  | "ky"
+  | "ka";
 
-type CONVERTER = "vosk" | "whisper";
+type CONVERTER = "vosk";
 
 type CONVERTER_STATUS = "OFF" | "LOADING" | "LOADED" | "STARTED" | "PAUSED";
 
