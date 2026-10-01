@@ -137,7 +137,7 @@ class Vosk {
             ar: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-ar-mgb2-0.4.zip",
             uk: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-uk-v3-nano.zip",
             kk: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-kz-0.42.zip",
-            ja: "https://voice2text-proxy.mehdiabhei.com/vosk/models/vosk-model-small-ja-0.22.zip",
+            ja: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-ja-0.22.zip",
             eo: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-eo-0.42.zip",
             hi: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-hi-0.22.zip",
             cs: "https://voice2text-proxy.mehdiabdi.com/vosk/models/vosk-model-small-cs-0.4-rhasspy.zip",
